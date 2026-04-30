@@ -33,7 +33,6 @@ For each event, respond with a JSON object:
   "concept": "<matching candidate>"
   "event": "<input event name>",
   "status": "OK | modified | NO_MATCH | uncertain",
-  "rationale": "<one-sentence reason citing the rule numbers applied, e.g. §1, §2, §4>"
 }
 ```
 
