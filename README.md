@@ -35,6 +35,7 @@ omop-map run-all
 
 # Or step-by-step:
 omop-map guess
+omop-map guess-check
 omop-map retrieve
 omop-map review
 omop-map verify
