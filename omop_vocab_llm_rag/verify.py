@@ -3,8 +3,10 @@ match against the RAG corpus, falling back to the top RAG candidate. Records
 with status NO_MATCH are emitted with no concept_id but are not dropped."""
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
+from types import ModuleType
 
 from tqdm import tqdm
 
@@ -12,7 +14,7 @@ from . import rag
 from .io_utils import read_jsonl
 
 
-def run(in_path: Path, rag_dir: Path, out_path: Path) -> None:
+def run(in_path: Path, rag_dir: Path, out_path: Path, cfg: ModuleType | None = None) -> None:
     stage3 = read_jsonl(in_path)
     if not stage3:
         raise SystemExit(f"No stage-3 records found at {in_path}")
@@ -71,4 +73,14 @@ def run(in_path: Path, rag_dir: Path, out_path: Path) -> None:
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2))
+
+    csv_path = cfg.STAGE4_CSV if cfg is not None else out_path.with_suffix(".csv")
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["event", "concept_id", "matched_concept_name", "match_score"])
+        for rec in out:
+            writer.writerow([rec["event"], rec["concept_id"], rec["matched_concept_name"], rec["match_score"]])
+
     print(f"Stage 4 done -> {out_path}")
+    print(f"Stage 4 CSV  -> {csv_path}")

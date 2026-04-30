@@ -68,13 +68,13 @@ def main(argv: list[str] | None = None) -> None:
     elif args.cmd == "review":
         review.run(args.inp or cfg.STAGE2_OUT, args.out or cfg.STAGE3_OUT, cfg)
     elif args.cmd == "verify":
-        verify.run(args.inp or cfg.STAGE3_OUT, args.rag or cfg.RAG_DIR, args.out or cfg.STAGE4_OUT)
+        verify.run(args.inp or cfg.STAGE3_OUT, args.rag or cfg.RAG_DIR, args.out or cfg.STAGE4_OUT, cfg)
     elif args.cmd == "run-all":
         guess.run(args.events or cfg.EVENTS_CSV, cfg.STAGE1_OUT, cfg)
         guess_check.run(cfg.STAGE1_OUT, cfg)
         retrieve.run(cfg.STAGE1_OUT, args.rag or cfg.RAG_DIR, cfg.STAGE2_OUT)
         review.run(cfg.STAGE2_OUT, cfg.STAGE3_OUT, cfg)
-        verify.run(cfg.STAGE3_OUT, args.rag or cfg.RAG_DIR, cfg.STAGE4_OUT)
+        verify.run(cfg.STAGE3_OUT, args.rag or cfg.RAG_DIR, cfg.STAGE4_OUT, cfg)
     elif args.cmd == "rag-query":
         idx = rag.load(args.rag or cfg.RAG_DIR)
         for cand in idx.query([args.text], k=args.k)[0]:
