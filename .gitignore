@@ -13,9 +13,9 @@ claude_api_key.txt
 models/
 
 # Generated outputs
-data/lab/rag_index/
-data/lab/stage1_guesses.jsonl
-data/lab/stage2_candidates.jsonl
-data/lab/stage3_reviews.jsonl
-data/lab/stage3_reviews.txt
-data/lab/stage4_verified.json
+data/*/rag_index/
+data/*/stage1_guesses.jsonl
+data/*/stage2_candidates.jsonl
+data/*/stage3_reviews.jsonl
+data/*/stage3_reviews.txt
+data/*/stage4_verified.json
