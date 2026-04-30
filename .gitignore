@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Secrets
+claude_api_key.txt
+
+# Local model snapshot (large; re-downloaded on demand)
+models/
+
+# Generated outputs
+data/lab/rag_index/
+data/lab/stage1_guesses.jsonl
+data/lab/stage2_candidates.jsonl
+data/lab/stage3_reviews.jsonl
+data/lab/stage3_reviews.txt
+data/lab/stage4_verified.json
