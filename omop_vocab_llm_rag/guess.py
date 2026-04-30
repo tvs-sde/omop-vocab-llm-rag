@@ -1,13 +1,14 @@
 """Stage 1: ask Claude to guess concept + synonyms for each event."""
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 import pandas as pd
 from tqdm import tqdm
 
 from . import claude_client, prompts
-from .config import BATCH_GUESS, MAX_TOKENS_GUESS
+from .config import BATCH_GUESS, MAX_TOKENS_GUESS, REQUEST_DELAY_SECONDS
 from .io_utils import append_jsonl, extract_json_objects
 
 
@@ -25,6 +26,7 @@ def run(events_csv: Path, out_path: Path) -> None:
         chunk = pending[start : start + BATCH_GUESS]
         prompt = prompts.build_guess_prompt([e for _, e in chunk])
         text = claude_client.complete(prompt, max_tokens=MAX_TOKENS_GUESS)
+        time.sleep(REQUEST_DELAY_SECONDS)
         objs = extract_json_objects(text)
         by_event = {o.get("event"): o for o in objs if isinstance(o, dict)}
 

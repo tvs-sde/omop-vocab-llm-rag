@@ -1,12 +1,13 @@
 """Stage 3: ask Claude to pick the best candidate per event. Output JSONL."""
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 from tqdm import tqdm
 
 from . import claude_client, prompts
-from .config import BATCH_REVIEW, MAX_TOKENS_REVIEW
+from .config import BATCH_REVIEW, MAX_TOKENS_REVIEW, REQUEST_DELAY_SECONDS
 from .io_utils import append_jsonl, extract_json_objects, read_jsonl
 
 
@@ -30,6 +31,7 @@ def run(in_path: Path, out_path: Path) -> None:
         ]
         prompt = prompts.build_review_prompt(payload)
         text = claude_client.complete(prompt, max_tokens=MAX_TOKENS_REVIEW)
+        time.sleep(REQUEST_DELAY_SECONDS)
         objs = extract_json_objects(text)
         append_jsonl(out_path, [o for o in objs if isinstance(o, dict)])
 
