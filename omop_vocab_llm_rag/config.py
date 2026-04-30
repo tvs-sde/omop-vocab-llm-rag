@@ -9,7 +9,7 @@ DATA_DIR = ROOT / "data" / "lab"
 
 # Inputs
 CONCEPTS_CSV = DATA_DIR / "lab_concepts.csv"
-EVENTS_CSV = DATA_DIR / "lab_events.csv"
+EVENTS_CSV = DATA_DIR / "lab_events_random_100.csv"
 API_KEY_FILE = ROOT / "claude_api_key.txt"
 
 # Prompt fragments
