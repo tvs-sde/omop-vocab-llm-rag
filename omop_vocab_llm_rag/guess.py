@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
+from types import ModuleType
 
 import pandas as pd
 from tqdm import tqdm
@@ -12,7 +13,7 @@ from .config import BATCH_GUESS, MAX_TOKENS_GUESS, REQUEST_DELAY_SECONDS
 from .io_utils import append_jsonl, extract_json_objects
 
 
-def run(events_csv: Path, out_path: Path) -> None:
+def run(events_csv: Path, out_path: Path, cfg: ModuleType) -> None:
     df = pd.read_csv(events_csv)
     col = df.columns[0]
     events = [str(e).strip() for e in df[col].tolist() if str(e).strip()]
@@ -24,7 +25,7 @@ def run(events_csv: Path, out_path: Path) -> None:
     print(f"Stage 1: {len(pending)} events to guess (model={claude_client.MODEL_CLAUDE})")
     for start in tqdm(range(0, len(pending), BATCH_GUESS)):
         chunk = pending[start : start + BATCH_GUESS]
-        prompt = prompts.build_guess_prompt([e for _, e in chunk])
+        prompt = prompts.build_guess_prompt([e for _, e in chunk], cfg)
         text = claude_client.complete(prompt, max_tokens=MAX_TOKENS_GUESS)
         time.sleep(REQUEST_DELAY_SECONDS)
         objs = extract_json_objects(text)

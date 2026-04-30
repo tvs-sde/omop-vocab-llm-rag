@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
+from types import ModuleType
 
 from tqdm import tqdm
 
@@ -11,7 +12,7 @@ from .config import BATCH_REVIEW, MAX_TOKENS_REVIEW, REQUEST_DELAY_SECONDS
 from .io_utils import append_jsonl, extract_json_objects, read_jsonl
 
 
-def run(in_path: Path, out_path: Path) -> None:
+def run(in_path: Path, out_path: Path, cfg: ModuleType) -> None:
     stage2 = read_jsonl(in_path)
     if not stage2:
         raise SystemExit(f"No stage-2 records found at {in_path}")
@@ -29,7 +30,7 @@ def run(in_path: Path, out_path: Path) -> None:
             }
             for r in chunk
         ]
-        prompt = prompts.build_review_prompt(payload)
+        prompt = prompts.build_review_prompt(payload, cfg)
         text = claude_client.complete(prompt, max_tokens=MAX_TOKENS_REVIEW)
         time.sleep(REQUEST_DELAY_SECONDS)
         objs = extract_json_objects(text)
