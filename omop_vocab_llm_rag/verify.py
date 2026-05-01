@@ -74,7 +74,7 @@ def run(in_path: Path, rag_dir: Path, out_path: Path, cfg: ModuleType | None = N
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2))
 
-    csv_path = cfg.STAGE4_CSV if cfg is not None else out_path.with_suffix(".csv")
+    csv_path = out_path.with_suffix(".csv")
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
