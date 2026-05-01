@@ -1,7 +1,6 @@
 # omop-vocab-llm-rag
 
-Map free-text UK hospital lab event names to OMOP/LOINC concepts using
-**Claude Opus 4.7** + a RAG index built with the
+Map free-text UK hospital lab event and medication names to OMOP (LOINC, dm+d) concepts using Claude (default Claude Haiku 4.5, can also use Claude Opus 4.7) + a RAG index built with the
 [`abhinand/MedEmbed-large-v0.1`](https://huggingface.co/abhinand/MedEmbed-large-v0.1)
 embedding model.
 
@@ -26,25 +25,27 @@ The Claude API key is read from `claude_api_key.txt` (or `ANTHROPIC_API_KEY`).
 
 ## Usage
 
+Examples for laboratory tests `--domain labs` (LOINC); for medications, use `--domain meds` (dm+d)
+
 ```bash
 # 1. Build the RAG index (required once, prerequisite for retrieve)
-omop-map build-rag
+omop-map --domain labs build-rag
 
 # 2. Run the full pipeline
-omop-map run-all
+omop-map --domain labs run-all
 
 # Or step-by-step:
-omop-map guess
-omop-map guess-check
-omop-map retrieve
-omop-map review
-omop-map verify
+omop-map --domain labs guess
+omop-map --domain labs guess-check
+omop-map --domain labs retrieve
+omop-map --domain labs review
+omop-map --domain labs verify
 
 # Ad-hoc RAG query for debugging
-omop-map rag-query "potassium" --k 5
+omop-map --domain labs rag-query "potassium" --k 5
 ```
 
-Outputs land in `data/lab/`:
+Outputs land in `data/lab/` or `data/meds`:
 
 - `rag_index/index.faiss`, `rag_index/concepts.parquet`
 - `stage1_guesses.jsonl`

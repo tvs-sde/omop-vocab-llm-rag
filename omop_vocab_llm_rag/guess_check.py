@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import ModuleType
 
 from tqdm import tqdm
 
@@ -16,8 +17,8 @@ def _is_null(value) -> bool:
     return value in (None, "", "null")
 
 
-def _retry_chunk(chunk: list[dict]) -> dict[int, dict]:
-    prompt = prompts.build_guess_prompt([r["event"] for r in chunk])
+def _retry_chunk(chunk: list[dict], cfg: ModuleType) -> dict[int, dict]:
+    prompt = prompts.build_guess_prompt([r["event"] for r in chunk], cfg)
     text = claude_client.complete(prompt, max_tokens=MAX_TOKENS_GUESS)
     objs = extract_json_objects(text)
     by_event = {o.get("event"): o for o in objs if isinstance(o, dict)}
@@ -36,7 +37,7 @@ def _retry_chunk(chunk: list[dict]) -> dict[int, dict]:
     return updated
 
 
-def run(in_out_path: Path) -> None:
+def run(in_out_path: Path, cfg: ModuleType) -> None:
     records = read_jsonl(in_out_path)
     if not records:
         raise SystemExit(f"No stage-1 records found at {in_out_path}")
@@ -54,7 +55,7 @@ def run(in_out_path: Path) -> None:
     updated_by_id: dict[int, dict] = {}
     for start in tqdm(range(0, len(null_records), BATCH_GUESS)):
         chunk = null_records[start : start + BATCH_GUESS]
-        updated_by_id.update(_retry_chunk(chunk))
+        updated_by_id.update(_retry_chunk(chunk, cfg))
 
     new_records = [updated_by_id.get(r["event_concept_id"], r) for r in records]
 

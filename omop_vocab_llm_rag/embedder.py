@@ -26,7 +26,7 @@ def _ensure_local_model() -> str:
 
 @lru_cache(maxsize=1)
 def get_model() -> SentenceTransformer:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu"
     local_path = _ensure_local_model()
     return SentenceTransformer(local_path, device=device)
 

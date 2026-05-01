@@ -1,31 +1,18 @@
-"""Static configuration constants and default paths."""
+"""Shared configuration constants and domain-config loader."""
 from __future__ import annotations
 
+import importlib
 import os
 from pathlib import Path
+from types import ModuleType
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT / "data" / "lab"
 
-# Inputs
-CONCEPTS_CSV = DATA_DIR / "lab_concepts.csv"
-EVENTS_CSV = DATA_DIR / "lab_events.csv"
+# Shared inputs
 API_KEY_FILE = ROOT / "claude_api_key.txt"
 
-# Prompt fragments
-PROMPT_BEGIN = ROOT / "lab_test_prompt_beginning.md"
-PROMPT_GUESS_END = ROOT / "lab_test_prompt_end_option_1_concept_guess.md"
-PROMPT_REVIEW_END = ROOT / "lab_test_prompt_end_option_2_choice_review.md"
-
-# Outputs
-RAG_DIR = DATA_DIR / "rag_index"
-STAGE1_OUT = DATA_DIR / "stage1_guesses.jsonl"
-STAGE2_OUT = DATA_DIR / "stage2_candidates.jsonl"
-STAGE3_OUT = DATA_DIR / "stage3_reviews.jsonl"
-STAGE4_OUT = DATA_DIR / "stage4_verified.json"
-
 # Models
-MODEL_CLAUDE = os.environ.get("OMOP_CLAUDE_MODEL", "claude-haiku-4-5-20251001")#"claude-opus-4-7")
+MODEL_CLAUDE = os.environ.get("OMOP_CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 MODEL_EMBED = "abhinand/MedEmbed-large-v0.1"
 MODEL_EMBED_DIR = ROOT / "models" / "MedEmbed-large-v0.1"
 
@@ -40,5 +27,15 @@ TOPK_TERM = 3
 MAX_TOKENS_GUESS = 16000
 MAX_TOKENS_REVIEW = 16000
 
+
 # Request rate limiting
 REQUEST_DELAY_SECONDS = 30
+
+# Domains
+_VALID_DOMAINS = ("labs", "meds")
+
+
+def get_domain_config(domain: str) -> ModuleType:
+    if domain not in _VALID_DOMAINS:
+        raise SystemExit(f"Unknown domain {domain!r}. Choose from: {', '.join(_VALID_DOMAINS)}")
+    return importlib.import_module(f".config_{domain}", package=__package__)
