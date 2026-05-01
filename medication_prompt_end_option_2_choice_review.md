@@ -1,7 +1,7 @@
 Apply the rules below in order. If after applying them no candidate is defensible, return
 **NO_MATCH** rather than guessing.
 
-Your aim is to select the bast candidate for any given event. Do not pick another concept. It must be a concept from the candidates collection.
+Your aim is to select the best candidate for any given event. Do not pick another concept. It must be a concept from the candidates collection.
 
 Input data
 
