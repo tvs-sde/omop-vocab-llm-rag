@@ -25,7 +25,7 @@ For each event, respond with a JSON object:
 
 ```json
 {
-  "concept": "<matching candidate>"
+  "concept": "<matching candidate>",
   "event": "<input event name>",
   "status": "OK | modified | NO_MATCH | uncertain",
   "rationale": "<one-sentence reason>"
