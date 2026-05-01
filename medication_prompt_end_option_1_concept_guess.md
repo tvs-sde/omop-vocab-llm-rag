@@ -9,7 +9,7 @@ For each event, respond with a JSON object:
   "event": "<input event name>",
   "concept": "<chosen dm+d concept long name, or null>",
   "event_similar_terms": ["<event synonym 1>", "<event synonym 2>", "<event synonym 3>"],
-  "concept_similar_terms": ["<concept synonym 1>", "<concept synonym 2>", "<concept synonym 3>"],
+  "concept_similar_terms": ["<concept synonym 1>", "<concept synonym 2>", "<concept synonym 3>"]
 }
 ```
 
